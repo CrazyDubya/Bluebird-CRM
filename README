@@ -1,4 +1,91 @@
-Welcome to BluebirdCRM, the evolution of legislative CRM!
+Welcome to **BluebirdCRM**, the evolution of legislative CRM.
+
+Bluebird is a Drupal 7 distribution bundled with CiviCRM and several custom
+extensions.  Each installation can host multiple *instances* of the CRM using a
+single code base.  Every instance keeps its own set of databases and dataset of
+contacts.
+
+Below is a quick start guide for provisioning an instance.  Sample configuration
+files and SQL templates live under the `templates/` directory and the main
+setup logic resides in `scripts/bluebird_setup.sh`.
+
+### Requirements
+
+* Apache 2.x or another web server
+* PHP 5.6 or newer with extensions such as XML, IMAP, APC/memcache
+* Additional PHP modules: curl, gd, mbstring, intl, zip, mysql
+* MySQL 5.5 or newer (or MariaDB)
+* `unzip`, `drush` and common command line tools
+
+More details are available in `drupal/INSTALL.txt`.
+
+### Basic Setup
+
+1. Copy `templates/bluebird.cfg` to `/etc/bluebird.cfg` and edit the values for
+   database credentials and directory paths.  At minimum configure these
+   parameters:
+
+   ```
+   db.civicrm.prefix = senate_c_
+   db.drupal.prefix  = senate_d_
+   db.log.prefix     = senate_l_
+   app.rootdir       = /opt/bluebird
+   data.rootdir      = /var/bluebird
+   import.rootdir    = /var/bluebird/importData
+   ```
+
+   Each `[instance:<name>]` section defines a dataset and other per-instance
+   settings such as `datasets = sd99`.
+
+2. Create the three databases required for each instance using the SQL files in
+   `templates/sql/`:
+
+   ```bash
+   mysql < templates/sql/cividb_template.sql
+   mysql < templates/sql/drupdb_template.sql
+   mysql < templates/sql/logdb_template.sql
+   ```
+
+3. Place dataset ZIP files under the directory specified by `import.rootdir`.
+   The filename should match the dataset name, e.g. `/var/bluebird/importData/sd99.zip`.
+   Prepare a CSV file of voters or constituents named `voter_data.csv` using a
+   header line followed by your records. A snippet of the expected format is
+   shown below:
+
+  ```csv
+  VSN,LastName,FirstName,MiddleInitial,NameSuffix,Borough,RegStreetNumber,RegStreetName,RegUnitNumber,RegCity,RegZipCode,...
+  123456789,SMITH,ALAN,Q,,Queens,555,OAK STREET,APT 2A,FLUSHING,11355,...
+  987654321,JONES,SARA,D,,Brooklyn,10,MAPLE ROAD,,BROOKLYN,11218,...
+  ```
+
+   Compress this file with `zip voter_data.zip voter_data.csv` and copy the zip
+   file to the import directory. Production datasets may be around 100&nbsp;MB in size.
+   If the dataset includes an `ISS.TXT` issue code file, it will be converted
+   automatically by `scripts/convert_issue_codes.sh` during setup, so you do not
+   need to create a separate converter.
+
+4. Run `./setup.sh <instance>` to bootstrap an instance.  This wrapper invokes
+   `scripts/bluebird_setup.sh` which copies the template site, imports data,
+   configures LDAP groups, clears caches, fixes permissions and sets up the
+   Mosaico e‑mail templates.  Use `--help` for additional options.
+
+5. Configure your web server to serve the new instance from the directory under
+   `$app.rootdir/instances/<instance>` and then visit the site in a browser.
+
+### Running Tests
+
+Bluebird ships with a PHPUnit test suite. Install PHPUnit (e.g. `apt-get install
+phpunit` on Debian/Ubuntu) and run:
+
+```bash
+./tests/runner.sh tests 1
+```
+
+The script writes results to `worker_0.log`. If no tests are present, it simply
+prints "No tests executed!".
+
+
+---
 
 New York State Senate Development Team
   Ken Zalewski (tech lead) - zalewski@nysenate.gov, zalewski.senate@gmail.com

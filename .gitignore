@@ -25,3 +25,9 @@ scripts/lcd.sh
 
 #civicrm
 civicrm/custom/ext/cache
+voter_data.csv
+
+# PHPUnit artifacts
+.phpunit.result.cache
+worker_*.log
+
