@@ -10,13 +10,13 @@
   "license": "GNU Affero Public License 3.0",
   "devDependencies": {
     "ansi-colors": "^4.1.1",
-    "backstopjs": "^5.0.1",
+    "backstopjs": "^6.3.25",
     "civicrm-cv": "^0.1.2",
     "fs": "0.0.1-security",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.1",
     "gulp-clean": "^0.4.0",
     "gulp-file": "^0.4.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "path": "^0.12.7",
     "plugin-error": "^1.0.1",
     "yargs": "^14.2.0"
