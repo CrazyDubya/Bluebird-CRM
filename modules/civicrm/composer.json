@@ -53,7 +53,7 @@
   "require": {
     "php": "~7.4 || ~8",
     "composer-runtime-api": "~2.0",
-    "dompdf/dompdf" : "~2.0.4",
+    "dompdf/dompdf" : "~2.0.4 || ~3.1.0",
     "firebase/php-jwt": ">=3 <7",
     "rubobaquero/phpquery": "^0.9.15",
     "symfony/config": "~4.4 || ~5.4 || ~6.0 || ~7.0",
@@ -108,7 +108,7 @@
     "ext-fileinfo": "*",
     "behat/mink": "^1.10",
     "dmore/chrome-mink-driver": "^2.9",
-    "pontedilana/php-weasyprint": "^0.13.0 || ^1",
+    "pontedilana/php-weasyprint": "^0.13.0 || ^1 || ^2",
     "knplabs/knp-snappy": "^1.4"
   },
   "scripts": {
